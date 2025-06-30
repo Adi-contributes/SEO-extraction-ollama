@@ -1,20 +1,22 @@
 package com.seotag.SEO.tag.entities;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class HTMLreader {
-    public static String readHtmlFile(String filePath) throws IOException {
-        return new String(Files.readAllBytes(Paths.get(filePath)));
-    }
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
-    public static void main(String[] args) {
+public class HTMLreader {
+    // Utility method to extract only the <article> tag from HTML using jsoup
+    public static String extractArticleTag(String filePath) {
         try {
-            String htmlContent = readHtmlFile("./seo.html");
-            System.out.println(htmlContent);
-        } catch (IOException e) {
-            System.err.println("Error reading HTML file: " + e.getMessage());
+            String html = Files.readString(Paths.get(filePath));
+            Document doc = Jsoup.parse(html);
+            Element article = doc.selectFirst("article");
+            return article != null ? article.outerHtml() : "No <article> tag found.";
+        } catch (Exception e) {
+            return "Error extracting article: " + e.getMessage();
         }
     }
 }

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Upload HTML & Prompt</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background: #10182a;
+        color: #f2f2f2;
+      }
+      .container {
+        display: flex;
+        gap: 20px;
+      }
+      .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .result {
+        margin-top: 30px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        background: #f9f9f9;
+        color: #10182a;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Upload HTML File & Enter Prompt</h2>
+    <form id="uploadForm">
+      <div class="container">
+        <div class="form-section">
+          <label for="file">HTML File:</label>
+          <input type="file" id="file" name="file" accept=".html" required />
+        </div>
+        <div class="form-section">
+          <label for="prompt">Prompt:</label>
+          <textarea
+            id="prompt"
+            name="prompt"
+            rows="6"
+            cols="40"
+            placeholder="Enter your prompt here..."
+            required
+          ></textarea>
+          <div style="margin-top: 8px; display: flex; gap: 10px">
+            <button
+              type="button"
+              id="seoTagsBtn"
+              style="
+                background: #98ff98;
+                color: #222;
+                border: none;
+                padding: 6px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+              "
+            >
+              Extract SEO tags
+            </button>
+            <button
+              type="button"
+              id="biasDetectorBtn"
+              style="
+                background: #ffb3b3;
+                color: #222;
+                border: none;
+                padding: 6px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+              "
+            >
+              Bias Detector
+            </button>
+          </div>
+        </div>
+      </div>
+      <button type="submit" style="margin-top: 20px">Submit</button>
+    </form>
+    <div id="result" class="result" style="display: none"></div>
+    <script>
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const fileInput = document.getElementById("file");
+          const promptInput = document.getElementById("prompt");
+          const resultDiv = document.getElementById("result");
+          const formData = new FormData();
+          formData.append("file", fileInput.files[0]);
+          formData.append("prompt", promptInput.value);
+          resultDiv.style.display = "block";
+          resultDiv.textContent = "Processing...";
+          try {
+            const response = await fetch("/api/upload-rest", {
+              method: "POST",
+              body: formData,
+            });
+            const text = await response.text();
+            resultDiv.textContent = text;
+          } catch (err) {
+            resultDiv.textContent = "Error: " + err;
+          }
+        });
+      document.getElementById("seoTagsBtn").onclick = function () {
+        document.getElementById("prompt").value =
+          "Extract SEO tags from the provided HTML.";
+      };
+      document.getElementById("biasDetectorBtn").onclick = function () {
+        document.getElementById("prompt").value =
+          "Detect and highlight any bias in the provided HTML content.";
+      };
+    </script>
+  </body>
+</html>

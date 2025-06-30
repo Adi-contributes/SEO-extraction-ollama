@@ -1,0 +1,23 @@
+services:
+  seotag-app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - localstack
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_REGION=us-east-1
+    
+
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566" 
+    environment:
+      - SERVICES=s3 
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+    volumes:
+      - ./localstack-data:/tmp/localstack/data

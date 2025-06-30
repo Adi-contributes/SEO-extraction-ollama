@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-SeoTagApplication<SEO-tag>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.seotag.SEO.tag.SeoTagApplication",
+      "projectName": "SEO-tag",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
