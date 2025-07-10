@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Upload HTML & Prompt</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background: #10182a;
+        color: #f2f2f2;
+      }
+      .container {
+        display: flex;
+        gap: 20px;
+      }
+      .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      input,
+      textarea {
+        background: #2a3441;
+        color: #f2f2f2;
+        border: 1px solid #4a5568;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-family: Arial, sans-serif;
+      }
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #63b3ed;
+        box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.2);
+      }
+      button {
+        background: #4a5568;
+        color: #f2f2f2;
+        border: 1px solid #718096;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        transition: background-color 0.2s;
+      }
+      button:hover {
+        background: #718096;
+      }
+      #seoTagsBtn:hover {
+        background: #48bb78;
+      }
+      #biasDetectorBtn:hover {
+        background: #f56565;
+      }
+      .result {
+        margin-top: 30px;
+        padding: 15px;
+        border: 1px solid #4a5568;
+        background: #2a3441;
+        color: #f2f2f2;
+        white-space: pre-wrap;
+        font-family: monospace;
+        line-height: 1.4;
+        max-height: 500px;
+        overflow-y: auto;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Bias Detector and SEO Extractor</h2>
+    <form id="uploadForm">
+      <div class="container">
+        <div class="form-section">
+          <label for="file">HTML File:</label>
+          <input type="file" id="file" name="file" accept=".html" />
+        </div>
+        <div class="form-section">
+          <label for="prompt">Prompt:</label>
+          <textarea
+            id="prompt"
+            name="prompt"
+            rows="6"
+            cols="40"
+            placeholder="Enter your prompt here..."
+            required
+          ></textarea>
+          <div style="margin-top: 8px; display: flex; gap: 10px">
+            <button
+              type="button"
+              id="seoTagsBtn"
+              style="
+                background: #38a169;
+                color: #f2f2f2;
+                border: 1px solid #48bb78;
+                padding: 6px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.2s;
+              "
+            >
+              Extract SEO tags
+            </button>
+            <button
+              type="button"
+              id="biasDetectorBtn"
+              style="
+                background: #e53e3e;
+                color: #f2f2f2;
+                border: 1px solid #f56565;
+                padding: 6px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.2s;
+              "
+            >
+              Bias Detector
+            </button>
+          </div>
+        </div>
+      </div>
+      <button type="submit" style="margin-top: 20px">Submit</button>
+    </form>
+    <div id="result" class="result" style="display: none"></div>
+    <script>
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const fileInput = document.getElementById("file");
+          const promptInput = document.getElementById("prompt");
+          const resultDiv = document.getElementById("result");
+          const formData = new FormData();
+          formData.append("file", fileInput.files[0]);
+          formData.append("prompt", promptInput.value);
+          resultDiv.style.display = "block";
+          resultDiv.textContent = "Processing...";
+          try {
+            const response = await fetch("/api/analyze", {
+              method: "POST",
+              body: formData,
+            });
+            const text = await response.text();
+            // Use textContent to preserve formatting with white-space: pre-wrap CSS
+            resultDiv.textContent = text;
+          } catch (err) {
+            resultDiv.textContent = "Error: " + err;
+          }
+        });
+      document.getElementById("seoTagsBtn").onclick = function () {
+        document.getElementById("prompt").value =
+          "Extract SEO tags from the provided HTML.";
+      };
+      document.getElementById("biasDetectorBtn").onclick = function () {
+        document.getElementById("prompt").value =
+          "Detect and highlight any bias in the provided HTML content.";
+      };
+    </script>
+  </body>
+</html>

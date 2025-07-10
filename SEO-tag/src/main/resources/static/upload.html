@@ -19,22 +19,63 @@
         flex-direction: column;
         gap: 10px;
       }
+      input,
+      textarea {
+        background: #2a3441;
+        color: #f2f2f2;
+        border: 1px solid #4a5568;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-family: Arial, sans-serif;
+      }
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #63b3ed;
+        box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.2);
+      }
+      button {
+        background: #4a5568;
+        color: #f2f2f2;
+        border: 1px solid #718096;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        transition: background-color 0.2s;
+      }
+      button:hover {
+        background: #718096;
+      }
+      #seoTagsBtn:hover {
+        background: #48bb78;
+      }
+      #biasDetectorBtn:hover {
+        background: #f56565;
+      }
       .result {
         margin-top: 30px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        background: #f9f9f9;
-        color: #10182a;
+        padding: 15px;
+        border: 1px solid #4a5568;
+        background: #2a3441;
+        color: #f2f2f2;
+        white-space: pre-wrap;
+        font-family: monospace;
+        line-height: 1.4;
+        max-height: 500px;
+        overflow-y: auto;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
       }
     </style>
   </head>
   <body>
-    <h2>Upload HTML File & Enter Prompt</h2>
+    <h2>Bias Detector and SEO Extractor</h2>
     <form id="uploadForm">
       <div class="container">
         <div class="form-section">
           <label for="file">HTML File:</label>
-          <input type="file" id="file" name="file" accept=".html" required />
+          <input type="file" id="file" name="file" accept=".html" />
         </div>
         <div class="form-section">
           <label for="prompt">Prompt:</label>
@@ -51,12 +92,13 @@
               type="button"
               id="seoTagsBtn"
               style="
-                background: #98ff98;
-                color: #222;
-                border: none;
+                background: #38a169;
+                color: #f2f2f2;
+                border: 1px solid #48bb78;
                 padding: 6px 16px;
                 border-radius: 4px;
                 cursor: pointer;
+                transition: background-color 0.2s;
               "
             >
               Extract SEO tags
@@ -65,12 +107,13 @@
               type="button"
               id="biasDetectorBtn"
               style="
-                background: #ffb3b3;
-                color: #222;
-                border: none;
+                background: #e53e3e;
+                color: #f2f2f2;
+                border: 1px solid #f56565;
                 padding: 6px 16px;
                 border-radius: 4px;
                 cursor: pointer;
+                transition: background-color 0.2s;
               "
             >
               Bias Detector
@@ -100,6 +143,7 @@
               body: formData,
             });
             const text = await response.text();
+            // Use textContent to preserve formatting with white-space: pre-wrap CSS
             resultDiv.textContent = text;
           } catch (err) {
             resultDiv.textContent = "Error: " + err;

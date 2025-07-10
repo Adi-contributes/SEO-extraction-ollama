@@ -8,7 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 public class HTMLreader {
-    // Utility method to extract only the <article> tag from HTML using jsoup
+    // method to extract only the <article tag from HTML using jsoup
     public static String extractArticleTag(String filePath) {
         try {
             String html = Files.readString(Paths.get(filePath));
